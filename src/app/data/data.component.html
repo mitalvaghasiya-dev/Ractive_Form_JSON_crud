@@ -1,0 +1,110 @@
+<div class="container mt-4">
+    <h2 class="mb-4">User Registration</h2>
+    
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row g-3 needs-validation" novalidate>
+      <div class="col-md-6">
+        <label>Name</label>
+        <input type="text" class="form-control" formControlName="name" [ngClass]="{'is-invalid': userForm.get('name')?.invalid && userForm.get('name')?.touched}" />
+       <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="invalid-feedback">
+          <div *ngIf="userForm.get('name')?.errors?.['required']">
+            Name is required.
+          </div>
+          <div *ngIf="userForm.get('name')?.errors?.['minlength']">
+            Min 3 characters required.
+          </div>
+        </div>
+      </div>
+ 
+      
+      <div class="col-md-6">
+        <label>Email</label>
+        <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched}" />
+        <div class="invalid-feedback" *ngIf="userForm.get('email')?.errors?.['required']">Email is required.</div>
+        <div class="invalid-feedback" *ngIf="userForm.get('email')?.errors?.['email']">Enter valid email.</div>
+      </div>
+  
+      <div class="col-md-6">
+        <label>Mobile</label>
+        <input type="text" class="form-control" formControlName="mobile" [ngClass]="{'is-invalid': userForm.get('mobile')?.invalid && userForm.get('mobile')?.touched}" />
+        <div class="invalid-feedback" *ngIf="userForm.get('mobile')?.errors?.['required']">Mobile is required.</div>
+        <div class="invalid-feedback" *ngIf="userForm.get('mobile')?.errors?.['pattern']">Enter a 10-digit number.</div>
+      </div>
+  
+      <div class="col-md-6">
+        <label>Date</label>
+        <input type="date" class="form-control" formControlName="date" [ngClass]="{'is-invalid': userForm.get('date')?.invalid && userForm.get('date')?.touched}" />
+        <div class="invalid-feedback">Date is required.</div>
+      </div>
+  
+      <div class="col-md-6">
+        <label class="form-label d-block">Gender</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" formControlName="gender" value="Male" id="genderMale">
+          <label class="form-check-label" for="genderMale">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" formControlName="gender" value="Female" id="genderFemale">
+          <label class="form-check-label" for="genderFemale">Female</label>
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="userForm.get('gender')?.invalid && userForm.get('gender')?.touched">
+          Gender is required.
+        </div>
+      </div>
+      
+  
+      <div class="col-md-6">
+        <label>Password</label>
+        <input type="password" class="form-control" formControlName="password" [ngClass]="{'is-invalid': userForm.get('password')?.invalid && userForm.get('password')?.touched}" />
+        <div class="invalid-feedback" *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</div>
+        <div class="invalid-feedback" *ngIf="userForm.get('password')?.errors?.['minlength']">Min 6 characters required.</div>
+      </div>
+  
+      <div class="col-md-6">
+        <label>Country</label>
+        <select class="form-control" formControlName="country" [ngClass]="{'is-invalid': userForm.get('country')?.invalid && userForm.get('country')?.touched}">
+          <option value="">Select Country</option>
+          <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+        </select>
+        <div class="invalid-feedback">Country is required.</div>
+      </div>
+  
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">{{ editMode ? 'Update' : 'Submit' }}</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Reset</button>
+      </div>
+    </form>
+  
+    <hr class="my-4" />
+  
+    <h4 class="mb-3">Registered Users</h4>
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>Date</th>
+          <th>Gender</th>
+          <th>Password</th>
+          <th>Country</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.mobile }}</td>
+          <td>{{ u.date }}</td>
+          <td>{{ u.gender }}</td>
+          <td>{{ u.password }}</td>
+          <td>{{ u.country }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2" (click)="editUser(u)">Edit</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
