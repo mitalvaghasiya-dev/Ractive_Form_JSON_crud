@@ -10,41 +10,76 @@ import { DataComponent } from './data/data.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  title(title: any) {
-    throw new Error('Method not implemented.');
+export class AppComponent implements OnInit{
+  form!: FormGroup;
+dynamicFormConfig :any[]= [
+  {
+    key: 'name',
+    type: 'text',
+    label: 'Full Name',
+    placeholder: 'Enter full name',
+    required: true
+  },
+  {
+    key: 'age',
+    type: 'number',
+    label: 'Age',
+    placeholder: 'Enter age',
+    required: true
+  },
+  {
+    key: 'dob',
+    type: 'date',
+    label: 'Date of Birth',
+    placeholder: 'Select date of birth',
+    required: true
+  },
+  {
+    key: 'gender',
+    type: 'select',
+    label: 'Gender',
+    placeholder: 'Select gender',
+    required: true,
+    options: ['Male', 'Female', 'Other']
+  },
+  {
+    key: 'password',
+    type: 'password',
+    label: 'Password',
+    placeholder: 'Enter password',
+    required: true
+  },
+  {
+    key: 'cityList',
+    type: 'multiselect',
+    label: 'Cities',
+    placeholder: 'Select cities',
+    required: true,
+    options: ['New York', 'Los Angeles', 'Chicago']
   }
-  dataList: any[] = [];
+];
 
-  formData = {
-  
-    city: '',
-    region: ''
-  };
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // this.getUserData();
+    this.form = this.fb.group({});
+    this.dynamicFormConfig.forEach(field => {
+      const validators = field.required ? [Validators.required] : [];
+      if (field.type === 'multiselect') {
+        this.form.addControl(field.key, this.fb.control([], validators));
+      } else {
+        this.form.addControl(field.key, this.fb.control('', validators));
+      }
+    });
   }
 
-  // getUserData(): void {
-  //   this.http.get('https://ipinfo.io/json?token=your_token_here').subscribe((res: any) => {
-  //     this.dataList =res;
-
-  //     console.log(res,'dat item show')
-  //     this.dataList.push({
-  //       city: res.city,
-  //       region: res.region
-  //     });
-  //   });
-  // }
-
-  // onSubmit(): void {
-  //   if (this.formData.city && this.formData.region) {
-  //     this.dataList.push({ ...this.formData });
-  //     console.log(this.formData)
-  //     this.formData = {city: '', region: '' };
-  //   }
-  // }
+  submit() {
+    if (this.form.valid) {
+      console.log(this.form.value);
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
 }
