@@ -29,3 +29,44 @@
   </form>
 </div> -->
 <app-data></app-data>
+
+
+
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="p-4">
+
+    <div *ngFor="let field of dynamicFormConfig" class="mb-3">
+      <label [for]="field.key" class="form-label">{{ field.label }}</label>
+  
+      <input *ngIf="field.type !== 'select' && field.type !== 'multiselect'"
+             [type]="field.type"
+             [formControlName]="field.key"
+             [placeholder]="field.placeholder"
+             class="form-control"
+             [id]="field.key">
+
+      <select *ngIf="field.type === 'select'" 
+              [formControlName]="field.key"
+              class="form-select"
+              [id]="field.key">
+        <option value="">{{ field.placeholder }}</option>
+        <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+      </select>
+      
+      <select *ngIf="field.type === 'multiselect'"
+              [formControlName]="field.key"
+              multiple
+              class="form-select"
+              [id]="field.key">
+        <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+      </select>
+  
+      <!-- Error -->
+      <div class="text-danger mt-1" *ngIf="form.get(field.key)?.touched && form.get(field.key)?.invalid">
+        {{ field.label }} is required.
+      </div>
+    </div>
+  
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+  
